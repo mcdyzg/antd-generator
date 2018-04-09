@@ -1,0 +1,18 @@
+.optbar-wrap {
+	width: 200px;
+	border-left: 1px solid #e8e8e8;
+	flex: 0 0 auto;
+	& > div > div {
+		padding: 10px;
+		height: 50px;
+		border-bottom: 1px solid #e8e8e8;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		cursor: pointer;
+		transition: all 0.3s;
+		&:hover {
+			background: #eafbff;
+		}
+	}
+}
