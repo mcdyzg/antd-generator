@@ -21,7 +21,7 @@ yarn start
 
 ## demo
 
-    [Demo](https://mcdyzg.github.io/projects/antd-generator/#/)
+[Demo](https://mcdyzg.github.io/projects/antd-generator/#/)
 
 ## features
 
