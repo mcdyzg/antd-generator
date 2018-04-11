@@ -1,13 +1,31 @@
 import React, { Component } from 'react'
 import './Content.scss'
-import { Button, Row, Col, Modal } from 'antd'
+import {
+	Menu,
+	Dropdown,
+	Button,
+	Row,
+	Col,
+	Modal,
+	Breadcrumb,
+	Pagination,
+	Steps,
+	Cascader,
+	Checkbox,
+	DatePicker,
+} from 'antd'
 import { connect } from 'ruex'
 import SearchBar from '@comp/SearchBar'
-import BasicTable from '@comp/BasicTable'
-import BasicForm from '@comp/BasicForm'
-import Carousel from '@comp/Carousel'
+import CustomTable from '@comp/CustomTable'
+import CustomForm from '@comp/CustomForm'
+import CustomCarousel from '@comp/CustomCarousel'
+import CustomBreadcrumb from '@comp/CustomBreadcrumb'
+import CustomPagination from '@comp/CustomPagination'
+import CustomSteps from '@comp/CustomSteps'
 const confirm = Modal.confirm
 import { isPlainObject } from '@utils'
+const Step = Steps.Step
+const { MonthPicker, RangePicker } = DatePicker
 
 class Content extends Component {
 	constructor(props) {
@@ -30,6 +48,7 @@ class Content extends Component {
 		e.stopPropagation()
 		const t = this
 		confirm({
+			maskClosable: true,
 			title: 'Are you sure delete this component?',
 			// content: 'Some descriptions',
 			okText: '确定',
@@ -62,18 +81,136 @@ class Content extends Component {
 			// 如果children存在，并且children的type属性为component,那么直接渲染组件
 			if (isPlainObject(obj.children)) {
 				if (obj.children.type === 'component') {
+					let data = obj.children.customSetting || {}
 					switch (obj.children.name) {
+						case 'Breadcrumb':
+							let temDom = data.map((item, index) => (
+								<Breadcrumb.Item key={index}>
+									{item}
+								</Breadcrumb.Item>
+							))
+							children = <Breadcrumb>{temDom}</Breadcrumb>
+							break
+						case 'Pagination':
+							children = (
+								<Pagination
+									showQuickJumper
+									// defaultCurrent={2}
+									total={data}
+								/>
+							)
+							break
+						case 'Steps':
+							children = (
+								<Steps current={data.current}>
+									{data.steps.map((item, index) => (
+										<Step
+											key={index}
+											title={item.title}
+											description={item.description}
+										/>
+									))}
+								</Steps>
+							)
+							break
+						case 'Button':
+							children = <Button type="primary">Primary</Button>
+							break
+						case 'Dropdown':
+							const menu = (
+								<Menu>
+									<Menu.Item>
+										<a>1st menu item</a>
+									</Menu.Item>
+									<Menu.Item>
+										<a>2nd menu item</a>
+									</Menu.Item>
+									<Menu.Item>
+										<a>3rd menu item</a>
+									</Menu.Item>
+								</Menu>
+							)
+							children = (
+								<Dropdown overlay={menu} placement="bottomLeft">
+									<Button>bottomLeft</Button>
+								</Dropdown>
+							)
+							break
+						case 'Cascader':
+							const options = [
+								{
+									value: 'zhejiang',
+									label: 'Zhejiang',
+									children: [
+										{
+											value: 'hangzhou',
+											label: 'Hangzhou',
+											children: [
+												{
+													value: 'xihu',
+													label: 'West Lake',
+												},
+											],
+										},
+									],
+								},
+								{
+									value: 'jiangsu',
+									label: 'Jiangsu',
+									children: [
+										{
+											value: 'nanjing',
+											label: 'Nanjing',
+											children: [
+												{
+													value: 'zhonghuamen',
+													label: 'Zhong Hua Men',
+												},
+											],
+										},
+									],
+								},
+							]
+							children = (
+								<Cascader
+									options={options}
+									placeholder="Please select"
+								/>
+							)
+							break
+						case 'Checkbox':
+							children = <Checkbox>Checkbox</Checkbox>
+							break
+						case 'DatePicker':
+							children = <DatePicker />
+							break
+						case 'MonthPicker':
+							children = <MonthPicker />
+							break
+						case 'RangePicker':
+							children = <RangePicker />
+							break
+
+						// 以下是自定义组件
 						case 'SearchBar':
-							children = <SearchBar />
+							children = <SearchBar id={obj.children.id} />
 							break
-						case 'BasicTable':
-							children = <BasicTable id={obj.children.id} />
+						case 'CustomTable':
+							children = <CustomTable id={obj.children.id} />
 							break
-						case 'BasicForm':
-							children = <BasicForm />
+						case 'CustomForm':
+							children = <CustomForm id={obj.children.id} />
 							break
-						case 'Carousel':
-							children = <Carousel />
+						case 'CustomCarousel':
+							children = <CustomCarousel id={obj.children.id} />
+							break
+						case 'CustomPagination':
+							children = <CustomPagination id={obj.children.id} />
+							break
+						case 'CustomSteps':
+							children = <CustomSteps id={obj.children.id} />
+						case 'CustomBreadcrumb':
+							children = <CustomBreadcrumb id={obj.children.id} />
 							break
 						default:
 					}
@@ -160,7 +297,7 @@ class Content extends Component {
 	}
 
 	render() {
-		const { layout, currentEditId, state, currentRoute } = this.props
+		const { currentEditId, state, currentRoute } = this.props
 		return (
 			<div
 				onClick={() => {
@@ -172,14 +309,19 @@ class Content extends Component {
 				}}
 				className="content-wrap"
 			>
-				{this.transLayoutToDom(state[currentRoute].layout)}
+				<div
+					className={
+						state.preview ? 'fe-is-preview' : 'fe-not-preview'
+					}
+				>
+					{this.transLayoutToDom(state[currentRoute].layout)}
+				</div>
 			</div>
 		)
 	}
 }
 
 const mapStateToProps = state => ({
-	layout: state.layout,
 	currentEditId: state.currentEditId,
 	currentRoute: state.currentRoute,
 	state,

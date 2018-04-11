@@ -1,10 +1,15 @@
 import { createStore } from 'ruex'
 import uuid from 'uuid/v1'
 import SearchBar from '@comp/SearchBar/store'
-import BasicTable from '@comp/BasicTable/store'
-import BasicForm from '@comp/BasicForm/store'
-import SiderMenu from '@comp/SiderMenu/store'
-import Carousel from '@comp/Carousel/store'
+import CustomTable from '@comp/CustomTable/store'
+import CustomForm from '@comp/CustomForm/store'
+import CustomCarousel from '@comp/CustomCarousel/store'
+import CustomBreadcrumb from '@comp/CustomBreadcrumb/store'
+import CustomPagination from '@comp/CustomPagination/store'
+import CustomSteps from '@comp/CustomSteps/store'
+
+import SiderMenu from '@modules/SiderMenu/store'
+import Header from '@modules/Header/store'
 
 // console.log(localStorage.page_layout)
 const state = {
@@ -13,6 +18,9 @@ const state = {
 	// currentEditPath: null,
 	// 当前所在路由
 	currentRoute: '/',
+
+	// 预览状态
+	preview: false,
 }
 
 const mutations = {
@@ -106,18 +114,16 @@ const mutations = {
 			currentEditPath: null,
 		}
 	},
+	// 更改预览状态
+	togglePreview(state, payload) {
+		state.preview = !state.preview
+	},
 }
 
 const actions = {
 	// 将新网格添加到布局里
 	addToLayout({ state, commit, rootState, dispatch }, payload) {
 		commit('addToLayoutMuta', payload)
-		// if (state.currentEditId !== null) {
-		// 	commit('markCurrentEdit', {
-		// 		id: null,
-		// 		path: null,
-		// 	})
-		// }
 	},
 	// 将组件添加到布局里
 	addComponentToLayout({ state, commit, rootState, dispatch }, payload) {
@@ -127,22 +133,35 @@ const actions = {
 		// 给组件生成一个组件store并添加
 		let compStore = {}
 		switch (payload.name) {
-			case 'BasicTable':
-				compStore = Object.assign({}, BasicTable)
+			case 'CustomTable':
+				compStore = Object.assign({}, CustomTable)
 				break
 			case 'SearchBar':
 				compStore = Object.assign({}, SearchBar)
 				break
-			case 'BasicForm':
-				compStore = Object.assign({}, BasicForm)
+			case 'CustomForm':
+				compStore = Object.assign({}, CustomForm)
 				break
-			case 'Carousel':
-				compStore = Object.assign({}, Carousel)
+			case 'CustomCarousel':
+				compStore = Object.assign({}, CustomCarousel)
+				break
+			case 'CustomBreadcrumb':
+				compStore = Object.assign({}, CustomBreadcrumb)
+				break
+			case 'CustomPagination':
+				compStore = Object.assign({}, CustomPagination)
+				break
+			case 'CustomSteps':
+				compStore = Object.assign({}, CustomSteps)
 				break
 			default:
 		}
-		store.registerModule(payload.id, compStore)
-		// store.unregisterMudole(payload.id)
+
+		// 如果component不需要store，那么不需要注册新的store
+		if (!payload.noNeedStore) {
+			store.registerModule(payload.id, compStore)
+			// store.unregisterMudole(payload.id)
+		}
 
 		// 添加组件的时候，如果当前要添加的位置已经有component了，那么需要先删掉当前位置的组件，然后在下一个宏任务中将组件添加上，这样做是为了新组建能重新执行construtor和componentDidMount
 		let currentComponent = state[state.currentRoute]
@@ -196,10 +215,11 @@ const store = createStore(
 		actions,
 		modules: {
 			SearchBar,
-			BasicTable,
-			BasicForm,
+			CustomTable,
+			CustomForm,
 			SiderMenu,
-			Carousel,
+			CustomCarousel,
+			Header,
 		},
 	},
 	[logger],

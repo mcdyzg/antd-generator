@@ -98,14 +98,19 @@ class SearchBar extends PureComponent {
 	}
 }
 
-const mapStateToProps = state => ({
-	SearchBar: state.SearchBar,
-})
+const mapStateToProps = (state, ownProps) => {
+	return {
+		SearchBar: state[ownProps.id],
+	}
+}
 
 const mapMutationsToProps = []
 
-const mapActionsToProps = ['requestSearchBarList']
-
+const mapActionsToProps = ownProps => {
+	return {
+		requestSearchBarList: ownProps.id + '/requestSearchBarList',
+	}
+}
 export default connect(mapStateToProps, mapMutationsToProps, mapActionsToProps)(
 	Form.create()(SearchBar),
 )

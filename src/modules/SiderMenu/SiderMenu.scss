@@ -1,0 +1,25 @@
+.sider-wrap {
+	flex: 0 0 256px;
+	max-width: 256px;
+	min-width: 256px;
+	width: 256px;
+	background: #001529;
+	.sider-header {
+		height: 64px;
+		position: relative;
+		line-height: 64px;
+		padding-left: 24px;
+		-webkit-transition: all 0.3s;
+		transition: all 0.3s;
+		background: #002140;
+		color: #fff;
+		font-size: 20px;
+		font-weight: 600;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 1;
+		line-clamp: 1;
+		-webkit-box-orient: vertical;
+	}
+}

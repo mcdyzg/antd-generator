@@ -1,18 +1,11 @@
 .app-wrap {
-	width: 100%;
+	min-height: 100vh;
 	display: flex;
-	.sider-wrap {
-		flex: 0 0 200px;
-		max-width: 200px;
-		min-width: 200px;
-		width: 200px;
-	}
-	.content-wrap {
-		flex: 1 1 auto;
-		overflow-x: hidden;
+	.container-wrap {
+		overflow: hidden;
 		min-height: 100vh;
-	}
-	.optbar-wrap {
-		flex: 0 0 200px;
+		flex: auto;
+		display: flex;
+		flex-direction: column;
 	}
 }
