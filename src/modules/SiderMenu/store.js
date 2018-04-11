@@ -22,7 +22,7 @@ const state = {
 		},
 	],
 	open: true,
-	title: 'fe-generator',
+	title: 'antd-generator',
 }
 
 const mutations = {

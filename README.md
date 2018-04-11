@@ -1,85 +1,42 @@
-## Introduction
+# antd-generator
 
-技术栈：
-
-- webpack
-- antd
-- redux
-- React
-- React-Router-Dom
-- fetch(whatwg-fetch)
-
-特性：
-
-- 可使用动态import或bundle-loader(require.ensure)进行页面异步加载
-- 使用react-hot-loader实现热加载
-- 请求模块封装fetch，并支持添加请求前后的回调事件。
-
-babel配置
-
-```js
-"presets": [
-    ["env", {
-        "modules": false
-    }],
-    "react",
-],
-"env": {
-    "development": {
-        "plugins": ["react-hot-loader/babel"]
-    }
-},
-"plugins": [
-    "transform-decorators",
-    "transform-object-rest-spread",
-    "syntax-dynamic-import",
-    "transform-class-properties",
-    ["transform-runtime", {
-        "helpers": false,
-        "polyfill": false,
-        "regenerator": true,
-        "moduleName": "babel-runtime"
-    }]
-]
-```
-图省事可以直接babel-preset-stage-0搞定
-
-## webpack splitChunks配置
-
-在默认配置上做了部分改动：对于同步加载的非node_modules模块(size>30k)，当有两个入口文件使用到该模块的时候，会抽出common包。
-
-```js
-chunks: "async",
-minSize:30000,
-minChunks:1,
-maxAsyncRequests:5,
-automaticNameDelimiter:'~',
-maxInitialRequests:3,
-name:true,
-cacheGroups: {
-    default: {
-        chunks:'all',
-        minChunks:2,
-        priority: -20,
-        reuseExistingChunk: true
-    },
-    vendors: {
-        test: /[\\/]node_modules[\\/]/,
-        priority: -10
-    }
-}
-```
-
+基于 antd3 的管理控制台项目生成工具。
 
 ## Usage
 
-development:
+npm:
+
 ```
 npm install
 
 npm start
 ```
-production:
+
+yarn:
+
 ```
-npm run build
+yarn
+yarn start
 ```
+
+## features
+
+*   支持 antd 的网格布局
+*   支持自定义路由配置
+*   支持自定义 antd 组件配置项
+*   支持 module，将包含业务逻辑的组件封装成 module 后，可以动态添加到任何地方。例如登录模块。
+*   运行 yarn build 后生成静态 html。
+
+## todo
+
+1.  完善 antd 基本组件的添加工作
+2.  添加登录模块，表单验证模块，表格筛选展示模块，markdown 模块。
+
+## dependencies
+
+*   webpack
+*   antd
+*   ruex
+*   React
+*   React-Router-Dom
+*   fetch(whatwg-fetch)
